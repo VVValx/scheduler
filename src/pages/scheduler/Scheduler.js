@@ -16,48 +16,6 @@ function Scheduler() {
     checkTimeRange();
   }, [date]);
 
-  const getOpenCloseHours = () => {
-    if (
-      day === 'monday' ||
-      day === 'tuesday' ||
-      day === 'wednesday' ||
-      day === 'thursday' ||
-      day === 'friday'
-    ) {
-      return {
-        open: openingHours.open,
-        close: openingHours.open,
-      };
-    }
-
-    if (day === 'saturday') {
-      return {
-        open: weekends.saturday.open,
-        close: weekends.saturday.close,
-      };
-    }
-
-    return {
-      open: weekends.sunday.open,
-      close: weekends.sunday.close,
-    };
-  };
-
-  const getTimeRange = () => {
-    const hours = getOpenCloseHours();
-    const openHour = Number(hours.open.split(':')[0]);
-    const closeHour = Number(hours.close.split(':')[0]);
-    const range = [];
-    timeFrame.forEach((time) => {
-      const t = Number(time.split(':')[0]);
-      if (t >= openHour && t < closeHour) {
-        range.push(time);
-      }
-    });
-
-    return range;
-  };
-
   const checkTimeRange = () => {
     const openHours = getTimeRange();
     const range = [];
@@ -76,6 +34,48 @@ function Scheduler() {
     setTimeRange(openHours);
   };
 
+  const getTimeRange = () => {
+    const hours = getOpenCloseHours();
+    const openHour = Number(hours.open.split(':')[0]);
+    const closeHour = Number(hours.close.split(':')[0]);
+    const range = [];
+    timeFrame.forEach((time) => {
+      const t = Number(time.split(':')[0]);
+      if (t >= openHour && t < closeHour) {
+        range.push(time);
+      }
+    });
+
+    return range;
+  };
+
+  const getOpenCloseHours = () => {
+    if (
+      day === 'monday' ||
+      day === 'tuesday' ||
+      day === 'wednesday' ||
+      day === 'thursday' ||
+      day === 'friday'
+    ) {
+      return {
+        open: openingHours.open,
+        close: openingHours.close,
+      };
+    }
+
+    if (day === 'saturday') {
+      return {
+        open: weekends.saturday.open,
+        close: weekends.saturday.close,
+      };
+    }
+
+    return {
+      open: weekends.sunday.open,
+      close: weekends.sunday.close,
+    };
+  };
+
   const disabledDate = (current) =>
     current && current < moment().startOf('day');
 
@@ -88,8 +88,8 @@ function Scheduler() {
 
   const chooseTime = ({ target: time }) => {
     const timeArr = time.textContent.split('-');
-    setPickupTime(timeArr[0]);
-    setDeliveryTime(timeArr[1]);
+    setPickupTime(timeArr[0] + ':00');
+    setDeliveryTime(timeArr[1] + ':00');
   };
 
   return (
